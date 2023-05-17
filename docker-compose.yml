@@ -1,0 +1,28 @@
+services:
+  app:
+    build: .
+    container_name: example
+    ports:
+      - 3000:3000
+    volumes:
+      # Since we're running nodemon and the current directory and /app directory are binded,
+      # when I update some file in my local machine the nodemon will restart the server in the container.
+      # No need to rebuild the container due to some code changes :)
+      # (Development only)
+      - ./app:/app
+      # Where I store the data between the two containers
+      - meu-volume:/data
+  # Creating two containers from the same image just for practice
+  app2:
+    build: .
+    container_name: example2
+    ports:
+      - 3030:3000
+    volumes:
+      - ./app:/app
+      - meu-volume:/data
+# Makes the external volume available
+volumes:
+  meu-volume:
+    external: true
+    name: meu-volume
